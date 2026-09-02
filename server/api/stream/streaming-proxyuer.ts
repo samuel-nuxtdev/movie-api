@@ -25,8 +25,8 @@ export default defineEventHandler(async (event) => {
 
   const fetchHeaders: Record<string, string> = {
     'User-Agent': 'okhttp/4.12.0',
-    'Referer': 'https://netfilm.world/',
-    'Origin': 'https://netfilm.world',
+    'Referer': 'https://fmoviesunblocked.net/',
+    'Origin': 'https://fmoviesunblocked.net',
     'Accept': '*/*',
   };
   if (rangeHeader) fetchHeaders['Range'] = rangeHeader;
