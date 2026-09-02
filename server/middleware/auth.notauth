@@ -1,0 +1,47 @@
+export default defineEventHandler((event) => {
+  const config = useRuntimeConfig(event);
+  const { pathname } = getRequestURL(event)
+  if (!pathname.startsWith('/api')) return
+  if (event.method === 'OPTIONS') return
+
+  // 1. PROXY PATHS - now supports 3 download tokens
+  const query = getQuery(event)
+  const proxyPath = ['/api/stream/streaming-proxy','/api/stream/download-proxy', '/api/stream/subtitle-download','/api/stream/subtitle-stream-proxy','/api/stream/download-proxy-web']
+  
+  if (proxyPath.includes(pathname)) {
+    const downloadToken = query.token
+    
+    // Hardcoded multiple keys
+    const validDownloadKeys = [
+      'dl_8A7B6C5D4E3F2G1H0I9J8K7L6M5N4O',
+      'dl_Q1W2E3R4T5Y6U7I8O9P0A1S2D3F4G5',
+      'dl_Z9X8C7V6B5N4M3L2K1J0H9G8F7E6D5'
+    ]
+
+    if (!downloadToken || !validDownloadKeys.includes(downloadToken)) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: 'Forbidden: Invalid Download Token'
+      })
+    }
+    return
+  }
+
+  // 2. NORMAL API KEY CHECK
+  const keysEnv = config.apiSecretKey;
+  const validKeys = [
+    'plexhd-8K2mP9qR4sT7vW1xY3zA6bC5dE0fG2hJ',
+    'plexhd-Q7nB3cD9eF1gH4iJ6kL8mN0pQ2rS5tU',
+    'plexhd-Z1xC4vB7nM3qW6eR9tY2uI5oP8aS0dF',
+  ]
+
+  const clientHeader = getHeader(event, 'X-AUTH-KEY')
+
+  if (!clientHeader || !validKeys.includes(clientHeader)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden: Access Denied'
+    })
+  }
+
+})
