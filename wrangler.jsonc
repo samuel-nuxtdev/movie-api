@@ -1,5 +1,5 @@
 {
-  "name": "plexhd",
+  "name": "cloud-video-proxing",
   "main": "./.output/server/index.mjs",
   "compatibility_date": "2025-07-15",
   "compatibility_flags": ["nodejs_compat"],
